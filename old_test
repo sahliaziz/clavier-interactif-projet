@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+"""
+Single GPIO Pin Test
+-------------------
+A very simple script to test a single GPIO pin in input mode.
+The script continuously reads the state of the specified pin and reports any changes.
+
+Usage:
+1. Set the TEST_PIN variable to the GPIO pin number you want to test
+2. Run with: sudo python3 single_pin_test.py
+3. Connect the pin to GND (or press the button/key if one is connected) to see the state change
+
+Press Ctrl+C to exit
+"""
+
+import RPi.GPIO as GPIO
+import time
+
+# Set this to the GPIO pin number you want to test
+TEST_PIN = 5  # Change this to any pin you want to test
+
+def setup_gpio():
+    """Set up the GPIO pin for testing"""
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(True)
+    
+    # Set up the pin as an input with a pull-up resistor
+    # With a pull-up, the pin will read HIGH (1) when not connected
+    # and LOW (0) when connected to ground
+    GPIO.setup(TEST_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    
+    print(f"GPIO setup complete. Testing pin {TEST_PIN} as INPUT with PULL-UP.")
+    print("The pin should read HIGH (1) when not connected/pressed.")
+    print("The pin should read LOW (0) when connected to GND/pressed.")
+
+def test_pin():
+    """Continuously read the pin state and report changes"""
+    print("\nMonitoring pin state. Press Ctrl+C to exit.")
+    print("-" * 50)
+    
+    last_state = None
+    last_change_time = 0
+    
+    try:
+        while True:
+            # Read current pin state
+            current_state = GPIO.input(TEST_PIN)
+            current_time = time.time()
+            
+            # Report state changes, or periodic updates every 3 seconds
+            if (current_state != last_state or 
+                    (last_state is not None and current_time - last_change_time > 3)):
+                
+                state_str = "HIGH (1)" if current_state else "LOW (0)"
+                status = "NOT PRESSED" if current_state else "PRESSED"
+                
+                print(f"Pin {TEST_PIN} state: {state_str} - {status} - Time: {time.strftime('%H:%M:%S')}")
+                
+                last_state = current_state
+                last_change_time = current_time
+            
+            # Small delay to prevent high CPU usage
+            time.sleep(0.1)
+    
+    except KeyboardInterrupt:
+        print("\nTest stopped by user.")
+    finally:
+        GPIO.cleanup()
+        print("GPIO cleaned up. Test complete.")
+
+if __name__ == "__main__":
+    print("Single GPIO Pin Test")
+    print("===================")
+    
+    try:
+        setup_gpio()
+        test_pin()
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        GPIO.cleanup()
+        print("Test complete.") 
