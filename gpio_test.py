@@ -17,19 +17,16 @@ Press Ctrl+C to exit
 import RPi.GPIO as GPIO
 import time
 
-# Use the same pin configuration as in your main keyboard_game.py
-# Adjust these to match your actual wiring!
-ROW_PINS = [5, 6, 13, 19, 26, 22]  # 6 rows
-COL_PINS = [12, 16, 15, 21, 25]    # 5 columns
+ROW_PINS =  [8, 10, 12, 16, 18] # EXAMPLE: Added pins 26, 22 for 6 rows
+COL_PINS = [3, 5, 7, 11, 13, 15, 19]
 
-# Same KEY_MAP as in your keyboard_game.py for reference
 KEY_MAP = [
-    ['A', 'B', 'C', 'D', 'E'],  # Row 0
-    ['F', 'G', 'H', 'I', 'J'],  # Row 1
-    ['K', 'L', 'M', 'N', 'O'],  # Row 2
-    ['P', 'Q', 'R', 'S', 'T'],  # Row 3
-    ['U', 'V', 'W', 'X', 'Y'],  # Row 4
-    ['Z', None, None, None, None]  # Row 5
+#   Cols: 0   1   2   3   4   (Pins: 12, 16, 20, 21, 25)
+    ['A', 'B', 'C', 'D', 'E', 'F'],   # Row 0 (Pin 5)
+    ['G', 'H', 'I', 'J', 'K', 'L'],   # Row 1 (Pin 6)
+    ['M', 'N', 'O', 'P', 'Q', 'R'],   # Row 2 (Pin 13)
+    ['S', 'T', 'U', 'V', 'X', 'Y'],   # Row 3 (Pin 19) <-- P is here [3][0],   # Row 4 (Pin 26)
+    ['Z', None, None, None, None] # Row 5 (Pin 22)
 ]
 
 # Debounce time (in seconds)
