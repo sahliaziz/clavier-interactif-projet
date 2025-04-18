@@ -34,7 +34,7 @@ DEBOUNCE_TIME = 0.05  # 50ms
 
 def setup_gpio():
     """Set up the GPIO pins for matrix scanning"""
-    GPIO.setmode(GPIO.BCM)
+    GPIO.setmode(GPIO.BOARD)
     GPIO.setwarnings(False)
     
     # Set rows as outputs initially high
