@@ -5,21 +5,19 @@ import os # To check for file existence
 import random
 
 # GPIO Pin Configuration (Adjust to your wiring!)
-#ROW_PINS = [5, 6, 13, 19]  # Example row pins (Outputs) - Original 4
-#COL_PINS = [12, 16, 20, 21] # Example column pins (Inputs with pull-up) - Original 4
-ROW_PINS = [5, 6, 13, 19, 26, 22]  # EXAMPLE: Added pins 26, 22 for 6 rows
-COL_PINS = [12, 16, 20, 21, 25] # EXAMPLE: Added pin 25 for 5 columns
+
+ROW_PINS =  [8, 10, 12, 16, 18] # EXAMPLE: Added pins 26, 22 for 6 rows
+COL_PINS = [3, 5, 7, 11, 13, 15, 19]
 
 # Key Map (Example for 6x5 matrix - A to Z + None)
 # Adjust this map to match your physical keyboard layout
 # Assumes A, B, C, P are needed for controls as currently implemented.
 KEY_MAP = [
 #   Cols: 0   1   2   3   4   (Pins: 12, 16, 20, 21, 25)
-    ['A', 'B', 'C', 'D', 'E'],   # Row 0 (Pin 5)
-    ['F', 'G', 'H', 'I', 'J'],   # Row 1 (Pin 6)
-    ['K', 'L', 'M', 'N', 'O'],   # Row 2 (Pin 13)
-    ['P', 'Q', 'R', 'S', 'T'],   # Row 3 (Pin 19) <-- P is here [3][0]
-    ['U', 'V', 'W', 'X', 'Y'],   # Row 4 (Pin 26)
+    ['A', 'B', 'C', 'D', 'E', 'F'],   # Row 0 (Pin 5)
+    ['G', 'H', 'I', 'J', 'K', 'L'],   # Row 1 (Pin 6)
+    ['M', 'N', 'O', 'P', 'Q', 'R'],   # Row 2 (Pin 13)
+    ['S', 'T', 'U', 'V', 'X', 'Y'],   # Row 3 (Pin 19) <-- P is here [3][0],   # Row 4 (Pin 26)
     ['Z', None, None, None, None] # Row 5 (Pin 22)
 ]
 
@@ -41,7 +39,7 @@ except Exception as e:
 # --- GPIO Setup ---
 def setup_gpio():
     """Sets up the GPIO pins for the keyboard matrix."""
-    GPIO.setmode(GPIO.BCM)
+    GPIO.setmode(GPIO.BOARD)
     GPIO.setwarnings(False)
 
     # Set rows as outputs
