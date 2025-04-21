@@ -6,23 +6,22 @@ import random
 
 # GPIO Pin Configuration (Adjust to your wiring!)
 
-ROW_PINS =  [8, 10, 12, 16, 18] # EXAMPLE: Added pins 26, 22 for 6 rows
-COL_PINS = [3, 5, 7, 11, 13, 15, 19]
+ROW_PINS =  [8, 10, 12, 16, 18]
+COL_PINS = [3, 5, 7, 11, 13, 15]
 
 # Key Map (Example for 6x5 matrix - A to Z + None)
 # Adjust this map to match your physical keyboard layout
-# Assumes A, B, C, P are needed for controls as currently implemented.
 KEY_MAP = [
-#   Cols: 0   1   2   3   4   (Pins: 12, 16, 20, 21, 25)
-    ['A', 'B', 'C', 'D', 'E', 'F'],   # Row 0 (Pin 5)
-    ['G', 'H', 'I', 'J', 'K', 'L'],   # Row 1 (Pin 6)
-    ['M', 'N', 'O', 'P', 'Q', 'R'],   # Row 2 (Pin 13)
-    ['S', 'T', 'U', 'V', 'X', 'Y'],   # Row 3 (Pin 19) <-- P is here [3][0],   # Row 4 (Pin 26)
-    ['Z', None, None, None, None] # Row 5 (Pin 22)
+#   Cols: 0   1   2   3   4   (Pins: 3, 5, 7, 11, 13, 15)
+    ['A', 'B', 'C', 'D', 'E', 'F'],   # Row 0 (Pin 8)
+    ['G', 'H', 'I', 'J', 'K', 'L'],   # Row 1 (Pin 10)
+    ['M', 'N', 'O', 'P', 'Q', 'R'],   # Row 2 (Pin 12)
+    ['S', 'T', 'U', 'V', 'X', 'Y'],   # Row 3 (Pin 16)
+    ['Z', None, None, None, None] # Row 5 (Pin 18)
 ]
 
 # Debounce time (in seconds)
-DEBOUNCE_TIME = 0.05 # 50ms
+DEBOUNCE_TIME = 0.02 # 20ms
 
 # --- Audio Setup ---
 AUDIO_DIR = "audio/" # Directory where WAV/OGG files are stored
@@ -298,7 +297,7 @@ if __name__ == "__main__":
         # Main loop for level selection menu
         while True:
             play_audio("menu_prompt") # Needs "menu_prompt.wav" for the main menu instruction
-            speak("Appuie sur A pour Niveau 1, B pour Niveau 2, ou C pour Niveau 3. Appuie sur P pour quitter.")
+            #speak("Appuie sur A pour Niveau 1, B pour Niveau 2, ou C pour Niveau 3. Appuie sur P pour quitter.")
             level_selected = False
             selected_level_key = None
 
