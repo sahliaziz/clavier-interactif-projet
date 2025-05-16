@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Minimal 5×6 matrix-keyboard demo for a Raspberry Pi
-– physical pin numbers are used (GPIO.BOARD mode)
-– rows are outputs (driven HIGH one-at-a-time)
-– columns are inputs with pull-downs
+Minimal 5x6 matrix-keyboard demo for a Raspberry Pi
+- physical pin numbers are used (GPIO.BOARD mode)
+- rows are outputs (driven HIGH one-at-a-time)
+- columns are inputs with pull-downs
 """
 
 import RPi.GPIO as GPIO
@@ -21,10 +21,10 @@ KEY_MAP = [
     ['G', 'H', 'I', 'J', 'K', 'L'],
     ['M', 'N', 'O', 'P', 'Q', 'R'],
     ['S', 'T', 'U', 'V', 'W', 'X'],
-    ['Y', 'Z', None, None, None, None],   # last two columns unused
+    ['Y', 'Z', '1', '2', '3', '4'],   # last two columns unused
 ]
 
-DEBOUNCE = 0.02      # seconds
+DEBOUNCE = 0.05
 
 
 # ── GPIO setup ───────────────────────────────────────────────────────────────
