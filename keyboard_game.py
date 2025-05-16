@@ -57,53 +57,36 @@ def setup_gpio():
     print("GPIO setup complete for diode matrix keyboard (reversed approach).")
 
 # --- Key Scanning ---
-def scan_keys():
-    """Scans the keyboard matrix and returns the character of the pressed key.
-    Uses reversed approach: all rows LOW, then each row HIGH one at a time."""
-    pressed_key = None
-    
-    # Set all rows LOW initially
-    for r_pin in ROW_PINS:
-        GPIO.output(r_pin, GPIO.LOW)
-    
-    # Scan each row by setting it HIGH and checking columns
-    for r_index, r_pin in enumerate(ROW_PINS):
-        # Set this row HIGH
-        GPIO.output(r_pin, GPIO.HIGH)
-        time.sleep(0.001)  # Short delay for signal propagation
-        
-        # Check all columns
-        for c_index, c_pin in enumerate(COL_PINS):
-            # With the reversed approach, when key is pressed:
-            # - Current row is HIGH
-            # - Current flows through key and diode to column
-            # - Column reads HIGH
-            
-            if GPIO.input(c_pin) == GPIO.HIGH:
-                # Debounce: wait and check again
-                time.sleep(DEBOUNCE_TIME)
-                if GPIO.input(c_pin) == GPIO.HIGH:
-                    try:
-                        pressed_key = KEY_MAP[r_index][c_index]
-                        # Wait for key release
-                        while GPIO.input(c_pin) == GPIO.HIGH:
-                            time.sleep(DEBOUNCE_TIME / 2)
-                        # Reset row before returning
-                        GPIO.output(r_pin, GPIO.LOW)
-                        return pressed_key
-                    except IndexError:
-                        # Handle cases where row/col index might be out of bounds for KEY_MAP
-                        print(f"Warning: Key press detected at invalid matrix position ({r_index}, {c_index})")
-                        # Wait for key release even if invalid
-                        while GPIO.input(c_pin) == GPIO.HIGH:
-                            time.sleep(DEBOUNCE_TIME / 2)
-                        GPIO.output(r_pin, GPIO.LOW)
-                        return None  # Return None for invalid key position
-        
-        # Reset the current row to LOW before checking the next one
-        GPIO.output(r_pin, GPIO.LOW)
-    
-    return None  # No key pressed
+def scan_keys() -> str | None:
+    """Return first key detected, or None.  Never blocks for long."""
+    # make sure every row is LOW
+    for r in ROW_PINS:
+        GPIO.output(r, GPIO.LOW)
+
+    for r_idx, r_pin in enumerate(ROW_PINS):
+        GPIO.output(r_pin, GPIO.HIGH)       # probe this row
+        time.sleep(0.0008)                  # ≈800 µs settle
+
+        for c_idx, c_pin in enumerate(COL_PINS):
+            if GPIO.input(c_pin):           # column went HIGH
+                time.sleep(DEBOUNCE)        # debounce check
+                if GPIO.input(c_pin):       # still HIGH → accept
+                    key = KEY_MAP[r_idx][c_idx]
+
+                    GPIO.output(r_pin, GPIO.LOW)   # **drop row now**
+
+                    # wait (non-blocking) until key released
+                    t_start = time.time()
+                    while GPIO.input(c_pin):
+                        time.sleep(0.001)
+                        # safety timeout (2 s)
+                        if time.time() - t_start > 2:
+                            break
+
+                    return key
+        GPIO.output(r_pin, GPIO.LOW)        # next row
+
+    return None
 
 # --- Audio Playback ---
 def play_audio(base_filename):
