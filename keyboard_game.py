@@ -27,7 +27,7 @@ DEBOUNCE_TIME = 0.02 # 20ms
 
 # --- Audio Setup ---
 AUDIO_DIR = "audio/" # Directory where WAV/OGG files are stored
-EXPECTED_AUDIO_EXT = ".wav" # Or ".ogg" if you prefer
+EXPECTED_AUDIO_EXT = ".mp3" # Or ".ogg" if you prefer
 
 try:
     pygame.mixer.init()
@@ -305,6 +305,7 @@ if __name__ == "__main__":
             # Wait for a valid menu selection
             while not selected_level_key:
                 key = scan_keys()
+                print(key)
                 if key in ['A', 'B', 'C', 'P']: # Check if key is a valid menu option
                     # Verify the key actually exists in the KEY_MAP
                     if any(key in row for row in KEY_MAP):
