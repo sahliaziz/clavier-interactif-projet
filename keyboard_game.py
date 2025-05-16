@@ -17,7 +17,7 @@ KEY_MAP = [
     ['G', 'H', 'I', 'J', 'K', 'L'],   # Row 1 (Pin 10)
     ['M', 'N', 'O', 'P', 'Q', 'R'],   # Row 2 (Pin 12)
     ['S', 'T', 'U', 'V', 'W', 'X'],   # Row 3 (Pin 16)
-    ['Y', 'Z', None, None, None] # Row 5 (Pin 18)
+    ['Y', 'Z', None, None, None, None] # Row 5 (Pin 18)
 ]
 
 # Debounce time (in seconds)
@@ -38,7 +38,7 @@ except Exception as e:
 # --- GPIO Setup ---
 def setup_gpio():
     """Sets up the GPIO pins for the keyboard matrix with diodes - reversed approach."""
-    GPIO.setmode(GPIO.BCM)
+    GPIO.setmode(GPIO.BOARD)
     GPIO.setwarnings(False)
 
     # For our reversed approach:
