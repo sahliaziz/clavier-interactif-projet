@@ -6,6 +6,8 @@ import random
 
 # GPIO Pin Configuration (Adjust to your wiring!)
 
+DEBOUNCE = 0.05
+
 ROW_PINS =  [8, 10, 12, 16, 18]
 COL_PINS = [3, 5, 7, 11, 13, 15]
 
