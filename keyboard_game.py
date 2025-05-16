@@ -313,7 +313,7 @@ if __name__ == "__main__":
                     else:
                          print(f"Warning: Menu key '{key}' pressed but not found in KEY_MAP.")
                          play_audio("touche") # Needs "touche.wav"
-                         play_audio(key)
+                         play_audio(key + "0")
                          play_audio("non_configuree") # Needs "non_configuree.wav"
                          time.sleep(1) # Pause before repeating menu
                          play_audio("menu_prompt_court") # Needs "menu_prompt_court.wav" for short prompt
