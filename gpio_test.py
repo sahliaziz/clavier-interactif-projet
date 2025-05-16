@@ -41,35 +41,36 @@ def setup_gpio() -> None:
 
 # ── Key-scan routine ─────────────────────────────────────────────────────────
 def scan_keys() -> str | None:
-    """
-    Returns the symbol of the first key detected, or None if no key is pressed.
-    Blocking time is negligible (just debounce + release wait for the hit key).
-    """
-
-    # make sure every row is LOW before we begin
+    """Return first key detected, or None.  Never blocks for long."""
+    # make sure every row is LOW
     for r in ROW_PINS:
         GPIO.output(r, GPIO.LOW)
 
-    # raise one row at a time and probe columns
     for r_idx, r_pin in enumerate(ROW_PINS):
-        GPIO.output(r_pin, GPIO.HIGH)
-        time.sleep(0.001)               # settle (≈1 ms is plenty)
+        GPIO.output(r_pin, GPIO.HIGH)       # probe this row
+        time.sleep(0.0008)                  # ≈800 µs settle
 
         for c_idx, c_pin in enumerate(COL_PINS):
-            if GPIO.input(c_pin):       # column went HIGH ⇒ key bridged
-                time.sleep(DEBOUNCE)    # debounce
-                if GPIO.input(c_pin):   # still HIGH → confirm
+            if GPIO.input(c_pin):           # column went HIGH
+                time.sleep(DEBOUNCE)        # debounce check
+                if GPIO.input(c_pin):       # still HIGH → accept
+                    key = KEY_MAP[r_idx][c_idx]
 
-                    # wait for release so we don't report repeats
+                    GPIO.output(r_pin, GPIO.LOW)   # **drop row now**
+
+                    # wait (non-blocking) until key released
+                    t_start = time.time()
                     while GPIO.input(c_pin):
-                        time.sleep(DEBOUNCE / 2)
+                        time.sleep(0.001)
+                        # safety timeout (2 s)
+                        if time.time() - t_start > 2:
+                            break
 
-                    GPIO.output(r_pin, GPIO.LOW)       # tidy up this row
-                    return KEY_MAP[r_idx][c_idx]
-
-        GPIO.output(r_pin, GPIO.LOW)    # drop row before moving on
+                    return key
+        GPIO.output(r_pin, GPIO.LOW)        # next row
 
     return None
+
 
 
 # ── Demo loop ────────────────────────────────────────────────────────────────
