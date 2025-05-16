@@ -16,8 +16,8 @@ KEY_MAP = [
     ['A', 'B', 'C', 'D', 'E', 'F'],   # Row 0 (Pin 8)
     ['G', 'H', 'I', 'J', 'K', 'L'],   # Row 1 (Pin 10)
     ['M', 'N', 'O', 'P', 'Q', 'R'],   # Row 2 (Pin 12)
-    ['S', 'T', 'U', 'V', 'X', 'Y'],   # Row 3 (Pin 16)
-    ['Z', None, None, None, None] # Row 5 (Pin 18)
+    ['S', 'T', 'U', 'V', 'W', 'X'],   # Row 3 (Pin 16)
+    ['Y', 'Z', None, None, None] # Row 5 (Pin 18)
 ]
 
 # Debounce time (in seconds)
@@ -37,57 +37,75 @@ except Exception as e:
 
 # --- GPIO Setup ---
 def setup_gpio():
-    """Sets up the GPIO pins for the keyboard matrix."""
-    GPIO.setmode(GPIO.BOARD)
+    """Sets up the GPIO pins for the keyboard matrix with diodes."""
+    GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
 
-    # Set rows as outputs
+    # For a matrix with diodes from rows to columns:
+    # 1. Set all rows as outputs (initially HIGH)
+    # 2. Set all columns as inputs with pull-down resistors
+    
+    # Set rows as outputs (initially HIGH)
     for r_pin in ROW_PINS:
         GPIO.setup(r_pin, GPIO.OUT)
-        GPIO.output(r_pin, GPIO.HIGH) # Set rows high initially
-
-    # Set columns as inputs with pull-up resistors
+        GPIO.output(r_pin, GPIO.HIGH)
+    
+    # Set columns as inputs with pull-down resistors
+    # Pull-down is important since diodes allow current to flow from row to column
     for c_pin in COL_PINS:
-        GPIO.setup(c_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    print("GPIO setup complete.")
+        GPIO.setup(c_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        
+    print("GPIO setup complete for diode matrix keyboard.")
 
 # --- Key Scanning ---
 def scan_keys():
-    """Scans the keyboard matrix and returns the character of the pressed key."""
+    """Scans the keyboard matrix and returns the character of the pressed key.
+    Optimized for a matrix with diodes from rows to columns."""
     pressed_key = None
+    
+    # Set all rows HIGH initially
+    for r_pin in ROW_PINS:
+        GPIO.output(r_pin, GPIO.HIGH)
+    
+    # Scan each row by setting it LOW and checking columns
     for r_index, r_pin in enumerate(ROW_PINS):
-        # Drive the current row low
+        # Set this row LOW
         GPIO.output(r_pin, GPIO.LOW)
-        time.sleep(0.001) # Short delay for signal propagation
-
-        # Check columns for a low signal (key press)
+        time.sleep(0.001)  # Short delay for signal propagation
+        
+        # Check all columns
         for c_index, c_pin in enumerate(COL_PINS):
-            if GPIO.input(c_pin) == GPIO.LOW:
+            # With diodes row->column, when key is pressed:
+            # - All rows except current one are HIGH
+            # - If a key is pressed in the current row, current flows from other rows through diodes
+            # - The column will read HIGH
+            
+            # For a key press with diodes, we check if column is HIGH
+            if GPIO.input(c_pin) == GPIO.HIGH:
                 # Debounce: wait and check again
                 time.sleep(DEBOUNCE_TIME)
-                if GPIO.input(c_pin) == GPIO.LOW:
+                if GPIO.input(c_pin) == GPIO.HIGH:
                     try:
                         pressed_key = KEY_MAP[r_index][c_index]
                         # Wait for key release
-                        while GPIO.input(c_pin) == GPIO.LOW:
+                        while GPIO.input(c_pin) == GPIO.HIGH:
                             time.sleep(DEBOUNCE_TIME / 2)
                         # Reset row before returning
                         GPIO.output(r_pin, GPIO.HIGH)
                         return pressed_key
                     except IndexError:
-                         # Handle cases where row/col index might be out of bounds for KEY_MAP
-                         print(f"Warning: Key press detected at invalid matrix position ({r_index}, {c_index})")
-                         # Wait for key release even if invalid
-                         while GPIO.input(c_pin) == GPIO.LOW:
-                             time.sleep(DEBOUNCE_TIME / 2)
-                         GPIO.output(r_pin, GPIO.HIGH)
-                         return None # Return None for invalid key position
-
-        # Reset the current row high before checking the next one
+                        # Handle cases where row/col index might be out of bounds for KEY_MAP
+                        print(f"Warning: Key press detected at invalid matrix position ({r_index}, {c_index})")
+                        # Wait for key release even if invalid
+                        while GPIO.input(c_pin) == GPIO.HIGH:
+                            time.sleep(DEBOUNCE_TIME / 2)
+                        GPIO.output(r_pin, GPIO.HIGH)
+                        return None  # Return None for invalid key position
+        
+        # Reset the current row to HIGH before checking the next one
         GPIO.output(r_pin, GPIO.HIGH)
-        # No need for extra sleep here if the loop delay is sufficient
-
-    return None # No key pressed
+    
+    return None  # No key pressed
 
 # --- Audio Playback ---
 def play_audio(base_filename):
