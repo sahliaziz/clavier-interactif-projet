@@ -37,50 +37,48 @@ except Exception as e:
 
 # --- GPIO Setup ---
 def setup_gpio():
-    """Sets up the GPIO pins for the keyboard matrix with diodes."""
+    """Sets up the GPIO pins for the keyboard matrix with diodes - reversed approach."""
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
 
-    # For a matrix with diodes from rows to columns:
-    # 1. Set all rows as outputs (initially HIGH)
+    # For our reversed approach:
+    # 1. Set all rows as outputs (initially LOW)
     # 2. Set all columns as inputs with pull-down resistors
     
-    # Set rows as outputs (initially HIGH)
+    # Set rows as outputs (initially LOW)
     for r_pin in ROW_PINS:
         GPIO.setup(r_pin, GPIO.OUT)
-        GPIO.output(r_pin, GPIO.HIGH)
+        GPIO.output(r_pin, GPIO.LOW)
     
     # Set columns as inputs with pull-down resistors
-    # Pull-down is important since diodes allow current to flow from row to column
     for c_pin in COL_PINS:
         GPIO.setup(c_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         
-    print("GPIO setup complete for diode matrix keyboard.")
+    print("GPIO setup complete for diode matrix keyboard (reversed approach).")
 
 # --- Key Scanning ---
 def scan_keys():
     """Scans the keyboard matrix and returns the character of the pressed key.
-    Optimized for a matrix with diodes from rows to columns."""
+    Uses reversed approach: all rows LOW, then each row HIGH one at a time."""
     pressed_key = None
     
-    # Set all rows HIGH initially
+    # Set all rows LOW initially
     for r_pin in ROW_PINS:
-        GPIO.output(r_pin, GPIO.HIGH)
-    
-    # Scan each row by setting it LOW and checking columns
-    for r_index, r_pin in enumerate(ROW_PINS):
-        # Set this row LOW
         GPIO.output(r_pin, GPIO.LOW)
+    
+    # Scan each row by setting it HIGH and checking columns
+    for r_index, r_pin in enumerate(ROW_PINS):
+        # Set this row HIGH
+        GPIO.output(r_pin, GPIO.HIGH)
         time.sleep(0.001)  # Short delay for signal propagation
         
         # Check all columns
         for c_index, c_pin in enumerate(COL_PINS):
-            # With diodes row->column, when key is pressed:
-            # - All rows except current one are HIGH
-            # - If a key is pressed in the current row, current flows from other rows through diodes
-            # - The column will read HIGH
+            # With the reversed approach, when key is pressed:
+            # - Current row is HIGH
+            # - Current flows through key and diode to column
+            # - Column reads HIGH
             
-            # For a key press with diodes, we check if column is HIGH
             if GPIO.input(c_pin) == GPIO.HIGH:
                 # Debounce: wait and check again
                 time.sleep(DEBOUNCE_TIME)
@@ -91,7 +89,7 @@ def scan_keys():
                         while GPIO.input(c_pin) == GPIO.HIGH:
                             time.sleep(DEBOUNCE_TIME / 2)
                         # Reset row before returning
-                        GPIO.output(r_pin, GPIO.HIGH)
+                        GPIO.output(r_pin, GPIO.LOW)
                         return pressed_key
                     except IndexError:
                         # Handle cases where row/col index might be out of bounds for KEY_MAP
@@ -99,11 +97,11 @@ def scan_keys():
                         # Wait for key release even if invalid
                         while GPIO.input(c_pin) == GPIO.HIGH:
                             time.sleep(DEBOUNCE_TIME / 2)
-                        GPIO.output(r_pin, GPIO.HIGH)
+                        GPIO.output(r_pin, GPIO.LOW)
                         return None  # Return None for invalid key position
         
-        # Reset the current row to HIGH before checking the next one
-        GPIO.output(r_pin, GPIO.HIGH)
+        # Reset the current row to LOW before checking the next one
+        GPIO.output(r_pin, GPIO.LOW)
     
     return None  # No key pressed
 
