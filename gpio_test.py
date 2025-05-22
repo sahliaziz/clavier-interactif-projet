@@ -12,7 +12,7 @@ import time
 # ── Matrix wiring ────────────────────────────────────────────────────────────
 # These are *physical header* pin numbers.  Leave them as-is if you really
 # wired to pins 3, 5, 7 … 18.  Otherwise change the lists or switch to BCM.
-ROW_PINS = [8, 10, 12, 15, 18]          # 5 rows
+ROW_PINS = [8, 10, 12, 20, 18]          # 5 rows
 COL_PINS = [7, 11, 13, 16, 19, 21]      # 6 columns
 
 # 5×6 lookup table (pad every row to six elements!)
