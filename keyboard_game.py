@@ -5,7 +5,7 @@ import os # To check for file existence
 import random
 
 # GPIO Pin Configuration (Adjust to your wiring!)
-
+NUM_QUESTIONS_DEFI = 10
 DEBOUNCE = 0.05
 
 ROW_PINS = [8, 10, 12, 16, 18]
@@ -22,8 +22,10 @@ KEY_MAP = [
     ['Y', 'Z', '1', '2', '3', '4'] # Row 5 (Pin 18)
 ]
 
-# Debounce time (in seconds)
-DEBOUNCE_TIME = 0.02 # 20ms
+ALPHABET = ("A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+            "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+            "U", "V", "W", "X", "Y", "Z") 
+
 
 # --- Audio Setup ---
 AUDIO_DIR = "audio/"
@@ -119,32 +121,29 @@ def play_audio(base_filename):
 # --- Game Levels ---
 def level_1():
     play_audio("niveau_1")
-    play_audio("appuyez_sur_touche_pour_lettre") # Needs "appuyez_sur_touche_pour_lettre.mp3"
-    play_audio("appuyez_sur_p_retour_menu") # Needs "appuyez_sur_p_retour_menu.mp3"
-    while True: # Loop indefinitely for level 1 (or add exit condition)
+    play_audio("appuyez_sur_touche_pour_lettre")
+    play_audio("appuyez_sur_1_quitter_jeu")
+    while True:
         key = scan_keys()
         if key:
-            if key == 'P': # Example exit key
-                play_audio("retour_menu") # Needs "retour_menu.mp3"
-                break
+            if key == '1': # Allow exiting mid-question
+                    play_audio("press_again")
+                    key = scan_keys()
+                    if key == '1':
+                        play_audio("retour_menu")
+                        break
             else:
-                play_audio(key) # Assumes "a.mp3", "b.mp3", etc. exist
+                play_audio(key + str(random.randint(0, 3))) # Assumes "a.mp3", "b.mp3", etc. exist
 
         time.sleep(0.02) # Small delay to prevent high CPU usage
 
 def level_2():
-    play_audio("niveau_2") # Needs "niveau_2.mp3"
-    # Flatten the key map to easily pick a random letter available on the keyboard
-    available_letters = [letter for row in KEY_MAP for letter in row if letter and letter != 'P'] # Exclude exit key 'P'
-    if not available_letters:
-        play_audio("aucune_lettre_configuree") # Needs "aucune_lettre_configuree.mp3"
-        play_audio("retour_menu")
-        return
+    play_audio("niveau_2")
 
     while True: # Loop for multiple questions
-        target_letter = random.choice(available_letters)
+        target_letter = random.choice(ALPHABET)
         play_audio("ou_est_la_lettre") # Needs "ou_est_la_lettre.mp3"
-        play_audio(target_letter) # Plays the letter sound
+        play_audio(target_letter + random.randint(0, 3)) # Plays the letter sound
 
         start_time = time.time()
         found = False
@@ -161,8 +160,12 @@ def level_2():
                     play_audio("cest_bien_la_lettre") # Needs "cest_bien_la_lettre.mp3"
                     play_audio(target_letter)
                     found = True
-                elif key == 'P': # Allow exiting mid-question
-                    play_audio("retour_menu")
+                elif key == '2': # Allow exiting mid-question
+                    play_audio("press_again")
+                    key = scan_keys()
+                    if key == '2':
+                        play_audio("retour_menu")
+                        break
                     return
                 else:
                     play_audio("non")
@@ -183,18 +186,18 @@ def level_2():
 
         # Ask if the user wants to continue
         play_audio("veux_tu_continuer")
-        play_audio("appuie_sur_a_oui_p_non") # Needs "appuie_sur_a_oui_p_non.mp3"
+        play_audio("appuie_sur_1_oui_2_non") # Needs "appuie_sur_a_oui_p_non.mp3"
         while True:
             key = scan_keys()
-            if key == 'A': # Assuming 'A' is top-left
+            if key == '1': # Assuming 'A' is top-left
                 break # Continue level 2 loop
-            elif key == 'P': # Assuming 'P' is bottom-right
+            elif key == '2': # Assuming 'P' is bottom-right
                 play_audio("retour_menu")
                 return # Exit level 2 function
             time.sleep(0.02)
 
 def level_3():
-    play_audio("niveau_3") # Needs "niveau_3.mp3"
+    play_audio("niveau_3")
     questions = {
         # MOTS A CHANGER!!
         # Ensure the target letter (value) exists in your KEY_MAP and is not 'P'
@@ -202,7 +205,6 @@ def level_3():
         "Maison": "M",    "Orange": "O",  "Lion": "L",   "Girafe": "G",
         "Elephant": "E",  "Nid": "N",     "Iguane": "I", "Jardin": "J",
         "Domino": "D",    "Fleur": "F",   "Hibou": "H",
-        # Added examples for new letters (ensure audio files exist, e.g., "zebre.mp3")
         "Quille": "Q",    "Robot": "R",   "Serpent": "S", "Table": "T",
         "Uniforme": "U",  "Vache": "V",   "Wagon": "W",   "Xylophone": "X",
         "Yaourt": "Y",    "Zebre": "Z",
@@ -288,6 +290,18 @@ def level_3():
             time.sleep(0.02)
 
 
+def level_4():
+    play_audio("niveau_4")
+    
+    for i in range(NUM_QUESTIONS_DEFI):
+        # play_audio("peux_tu_resoudre_le_defi_jsp_quoi")
+        levels = (level_1, level_2, level_3)
+        random_level = random.choice(levels)
+        random_level()
+        pass
+    return
+
+
 # --- Main Program ---
 if __name__ == "__main__":
     try:
@@ -309,25 +323,25 @@ if __name__ == "__main__":
                 if key in ['1', '2', '3', '4']: # Check if key is a valid menu option
                     # Verify the key actually exists in the KEY_MAP
                     if any(key in row for row in KEY_MAP):
-                         selected_level_key = key
+                        selected_level_key = key
                     else:
-                         print(f"Warning: Menu key '{key}' pressed but not found in KEY_MAP.")
-                         play_audio("touche")
-                         play_audio(key + "0")
-                         play_audio("non_configuree")
-                         time.sleep(1)
-                         play_audio("menu_prompt_court")
+                        print(f"Warning: Menu key '{key}' pressed but not found in KEY_MAP.")
+                        play_audio("touche")
+                        play_audio(key + "0")
+                        play_audio("non_configuree")
+                        time.sleep(1)
+                        play_audio("menu_prompt_court")
                 time.sleep(0.02)
 
             # Execute selected action
             if selected_level_key == '1':
-                 level_1()
+                level_1()
             elif selected_level_key == '2':
-                 level_2()
+                level_2()
             elif selected_level_key == '3':
-                 level_3()
+                level_3()
             elif selected_level_key == '4':
-                play_audio("au_revoir") # Needs "au_revoir.mp3"
+                level_4() # Needs "au_revoir.mp3"
                 break # Exit the main program loop
 
 
