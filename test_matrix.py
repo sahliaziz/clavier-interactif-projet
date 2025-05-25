@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-from keyboard_game import ROW_PINS, COL_PINS,
+from keyboard_game import ROW_PINS, COL_PINS
 
 
 def setup_gpio():

@@ -158,7 +158,7 @@ def level_2():
     while True: # Loop for multiple questions
         target_letter = random.choice(ALPHABET)
         play_audio("ou_est_la_lettre") # Needs "ou_est_la_lettre.mp3"
-        play_audio(target_letter) # Plays the letter sound
+        play_letter(target_letter) # Plays the letter sound
 
         start_time = time.time()
         found = False
