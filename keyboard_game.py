@@ -307,7 +307,6 @@ if __name__ == "__main__":
             # Wait for a valid menu selection
             while not selected_level_key:
                 key = scan_keys()
-                print(key)
                 if key in ['1', '2', '3', '4']: # Check if key is a valid menu option
                     # Verify the key actually exists in the KEY_MAP
                     if any(key in row for row in KEY_MAP):
