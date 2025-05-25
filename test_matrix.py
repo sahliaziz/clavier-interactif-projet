@@ -1,18 +1,7 @@
 import RPi.GPIO as GPIO
 import time
+from keyboard_game import ROW_PINS, COL_PINS,
 
-# GPIO Pin Configuration (matching keyboard_game.py)
-ROW_PINS = [8, 10, 12, 15, 18]
-COL_PINS = [7, 11, 13, 16, 19, 21]
-
-# Key Map (matching keyboard_game.py)
-KEY_MAP = [
-    ['A', 'B', 'C', 'D', 'E', 'F'],   # Row 0
-    ['G', 'H', 'I', 'J', 'K', 'L'],   # Row 1
-    ['M', 'N', 'O', 'P', 'Q', 'R'],   # Row 2
-    ['S', 'T', 'U', 'V', 'W', 'X'],   # Row 3
-    ['Y', 'Z', '1', '2', '3', '4']    # Row 4
-]
 
 def setup_gpio():
     """Sets up the GPIO pins for testing."""
