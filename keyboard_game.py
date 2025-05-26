@@ -36,13 +36,13 @@ questions = {
 }
 
 questions_dur = {
-    "Alimentation": "A", "Anniversaire": "A", "Anticipation": "A", "Aspirateur": "A", "Boulanger": "B", "Bienvenue": "B",
-    "Calculatrice": "C", "Carnivore": "C", "Cartouche": "C", "Catastrophe": "C", "Champignon": "C", "Chaussettes": "C",
-    "Chauvesouris": "C", "Chocolat": "C", "Compote": "C", "Crevette": "C", "Crocodile": "C", "Description": "D",
-    "Dinosaure": "D", "Dromadaire": "D", "Elephant": "E", "Escargot": "E", "Gaufrette": "G", "Hippopotame": "H",
-    "Imagination": "I", "Lamibulo": "L", "Majuscule": "M", "Motivation": "M", "Moustiques": "M", "Navigation": "N",
-    "Noyau": "N", "Orientation": "O", "Population": "P", "Publication": "P", "Radiateur": "R", "Salamandre": "S",
-    "Squelette": "S", "Sympathie": "S", "Tournevis": "T", "Trottinette": "T", "Vocabulaire": "V", "Xylophone": "X"
+    "alimentation": "A", "anniversaire": "A", "Anticipation": "A", "Aspirateur": "A", "Boulanger": "B", "Bienvenue": "B",
+    "calculatrice": "C", "Carnivore": "C", "Cartouche": "C", "Catastrophe": "C", "Champignon": "C", "Chaussettes": "C",
+    "chauvesouris": "C", "Chocolat": "C", "Compote": "C", "Crevette": "C", "Crocodile": "C", "Description": "D",
+    "cinosaure": "D", "Dromadaire": "D", "Elephant": "E", "Escargot": "E", "Gaufrette": "G", "Hippopotame": "H",
+    "imagination": "I", "Lamibulo": "L", "Majuscule": "M", "Motivation": "M", "Moustiques": "M", "Navigation": "N",
+    "noyau": "N", "Orientation": "O", "Population": "P", "Publication": "P", "Radiateur": "R", "Salamandre": "S",
+    "squelette": "S", "sympathie": "S", "Tournevis": "T", "Trottinette": "T", "Vocabulaire": "V", "Xylophone": "X"
 }
 
 
@@ -221,16 +221,16 @@ def level_1():
             key = scan_keys()
             if key:
                 if key == target_letter:
-                    if choice == 0 :
-                    play_audio("bravo0") # Needs "bravo.mp3"
-                    play_audio("cest_bien_la_lettre") # Needs "cest_bien_la_lettre.mp3"
-                    play_audio(target_letter)
-                    found = True
-                    elif choice == 1 :
-                    play_audio("bravo1") # Needs "bravo.mp3"
-                    play_audio("cest_bien_la_lettre") # Needs "cest_bien_la_lettre.mp3"
-                    play_audio(target_letter)
-                    found = True
+                    if choice == 0:
+                        play_audio("bravo0") # Needs "bravo.mp3"
+                        play_audio("cest_bien_la_lettre") # Needs "cest_bien_la_lettre.mp3"
+                        play_audio(target_letter)
+                        found = True
+                    elif choice == 1:
+                        play_audio("bravo1") # Needs "bravo.mp3"
+                        play_audio("cest_bien_la_lettre") # Needs "cest_bien_la_lettre.mp3"
+                        play_audio(target_letter)
+                        found = True
                 elif key == '4': # Allow exiting mid-question
                     play_audio("retour_menu_confirmer")
                     play_audio("retour_menu") 
@@ -260,8 +260,8 @@ def level_1():
                 return # Exit level 2 function
             time.sleep(0.02)
 
-def level_3():
-    play_audio("niveau_3") # Needs "niveau_3.mp3"
+def level_2():
+    play_audio("niveau_2") # Needs "niveau_3.mp3"
     # Filter questions based on available keys (excluding 'P' and None)
     flat_key_map = {letter for row in KEY_MAP for letter in row if letter and letter != 'P'}
     available_questions = {word: letter for word, letter in questions.items()
@@ -343,6 +343,143 @@ def level_3():
                 play_audio("retour_menu") 
                 return # Exit level 3 function
             time.sleep(0.02)
+
+def level_3():
+    play_audio("niveau_3")
+    flat_key_map = {letter for row in KEY_MAP for letter in row if letter and letter != 'P'}
+
+    mots = list(questions.keys())
+    random.shuffle(mots)
+    mots = mots[:10]
+    mots_durs = list(questions_dur.keys())
+    random.shuffle(mots_durs)
+
+    # On commence avec les mots simples, puis on passe aux mots durs
+    all_words = mots + mots_durs
+    word_index = 0
+    letter_pos = 0
+    compteur = 0
+    max_letter = 12  # douzieme_lettre
+
+    while word_index < len(all_words) and letter_pos < max_letter:
+        # On prend le bon mot selon l'étape (mots ou mots_durs)
+        if word_index < 10:
+            current_words = all_words[:10]
+        else:
+            current_words = all_words[10:]
+
+        # On ne garde que les mots assez longs pour la lettre demandée
+        available_words = [w for w in current_words if len(w) > letter_pos]
+        if not available_words:
+            break
+
+        word = random.choice(available_words)
+        target_letter = word[letter_pos].upper()
+        if target_letter not in flat_key_map:
+            # On retire ce mot pour cette position
+            all_words.remove(word)
+            continue
+
+        # Choix du bon audio pour la position de la lettre
+        if letter_pos == 0:
+            play_audio("premiere_lettre")
+        elif letter_pos == 1:
+            play_audio("deuxieme_lettre")
+        elif letter_pos == 2:
+            play_audio("troisieme_lettre")
+        elif letter_pos == 3:
+            play_audio("quatrieme_lettre")
+        elif letter_pos == 4:
+            play_audio("cinquieme_lettre")
+        elif letter_pos == 5:
+            play_audio("sixieme_lettre")
+        elif letter_pos == 6:
+            play_audio("septieme_lettre")
+        elif letter_pos == 7:
+            play_audio("huitieme_lettre")
+        elif letter_pos == 8:
+            play_audio("neuvieme_lettre")
+        elif letter_pos == 9:
+            play_audio("dixieme_lettre")
+        elif letter_pos == 10:
+            play_audio("onzieme_lettre")
+        elif letter_pos == 11:
+            play_audio("douzieme_lettre")
+        else:
+            play_audio("lettre_suivante")
+
+        play_audio(word.lower())
+
+        start_time = time.time()
+        found = False
+        timed_out = False
+        while not found and not timed_out:
+            if time.time() - start_time > 30:
+                timed_out = True
+                break
+
+            key = scan_keys()
+            if key:
+                if key == target_letter:
+                    play_audio("oui")
+                    play_audio(target_letter)
+                    play_audio("comme_dans") 
+                    play_audio(word)
+                    play_audio("bravo")
+                    found = True
+                    compteur += 1
+                    all_words.remove(word)
+                elif key == '4':
+                    play_audio("retour_menu_confirmer")
+                    play_audio("retour_menu")
+                    return
+                else:
+                    play_audio("non1")
+                    play_audio("ca_cest_la_lettre")
+                    play_audio(key)
+                    play_audio("essaie_encore")
+            time.sleep(0.02)
+
+        if timed_out:
+            play_audio("temps_ecoule")
+            play_audio(word)
+            play_audio("est")
+            play_audio(target_letter)
+            all_words.remove(word)
+
+        # On passe à la lettre suivante chaque fois que 5 mots sont réussis
+        if compteur > 0 and compteur % 5 == 0:
+            letter_pos += 1
+
+        # Après 10 mots réussis, on passe aux mots durs
+        if compteur == 10:
+            play_audio("niveau_questions_difficiles")
+            # On continue la boucle, mais current_words sera mots_durs
+
+        # Si plus de mots disponibles pour cette lettre, on passe à la suivante
+        if not [w for w in current_words if len(w) > letter_pos]:
+            letter_pos += 1
+
+        # Si plus de mots du tout, on termine
+        if not all_words:
+            play_audio("toutes_questions_repondues")
+            play_audio("felicitations")
+            break
+
+        # Demande si on continue
+        play_audio("veux_tu_continuer")
+        play_audio("appuie_sur_1_oui_2_non")
+        while True:
+            key = scan_keys()
+            if key == '1':
+                break
+            elif key == '2':
+                play_audio("retour_menu_confirmer")
+                play_audio("retour_menu")
+                return
+            time.sleep(0.02)
+    
+
 
 
 # --- Main Program ---
