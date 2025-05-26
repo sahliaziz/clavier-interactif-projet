@@ -26,15 +26,25 @@ ALPHABET = ("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"
 
 
 questions = {
-        # MOTS A CHANGER!!
-        "Kangourou": "K", "Avion": "A",   "Bateau": "B", "Chat": "C",
-        "Maison": "M",    "Orange": "O",  "Lion": "L",   "Girafe": "G",
-        "Elephant": "E",  "Nid": "N",     "Iguane": "I", "Jardin": "J",
-        "Domino": "D",    "Fleur": "F",   "Hibou": "H",
-        "Quille": "Q",    "Robot": "R",   "Serpent": "S", "Table": "T",
-        "Uniforme": "U",  "Vache": "V",   "Wagon": "W",   "Xylophone": "X",
-        "Yaourt": "Y",    "Zebre": "Z",
+    "Avion": "A", "Banane": "B", "Bateau": "B", "Biscuit": "B", "Bleu": "B", "Bougie": "B",
+    "Fleur": "F", "Fourchette": "F", "Girafe": "G", "Grenouille": "G", "Grimace": "G", "Hibou": "H",
+    "Homard": "H", "Jardin": "J", "Lapin": "L", "Lion": "L", "Lune": "L", "Lunette": "L",
+    "Maison": "M", "Orange": "O", "Oreiller": "O", "Papillon": "P", "Parapluie": "P", "Pingouin": "P",
+    "Presque": "P", "Quille": "Q", "Robot": "R", "Ronflement": "R", "Saumon": "S", "Scorpion": "S",
+    "Serpent": "S", "Serviette": "S", "Souris": "S", "Symbole": "S", "Table": "T", "Tortue": "T",
+    "Trampoline": "T", "Uniforme": "U", "Vache": "V", "Ventilateur": "V", "Zebre": "Z", "Yaourt": "Y"
 }
+
+questions_dur = {
+    "Alimentation": "A", "Anniversaire": "A", "Anticipation": "A", "Aspirateur": "A", "Boulanger": "B", "Bienvenue": "B",
+    "Calculatrice": "C", "Carnivore": "C", "Cartouche": "C", "Catastrophe": "C", "Champignon": "C", "Chaussettes": "C",
+    "Chauvesouris": "C", "Chocolat": "C", "Compote": "C", "Crevette": "C", "Crocodile": "C", "Description": "D",
+    "Dinosaure": "D", "Dromadaire": "D", "Elephant": "E", "Escargot": "E", "Gaufrette": "G", "Hippopotame": "H",
+    "Imagination": "I", "Lamibulo": "L", "Majuscule": "M", "Motivation": "M", "Moustiques": "M", "Navigation": "N",
+    "Noyau": "N", "Orientation": "O", "Population": "P", "Publication": "P", "Radiateur": "R", "Salamandre": "S",
+    "Squelette": "S", "Sympathie": "S", "Tournevis": "T", "Trottinette": "T", "Vocabulaire": "V", "Xylophone": "X"
+}
+
 
 # Debounce time (in seconds)
 DEBOUNCE_TIME = 0.02 # 20ms
