@@ -141,6 +141,15 @@ def play_ou_est_lettre(letter) :
         play_audio("ou_est_la_lettre_" + letter.lower())
     else:
         print(f"Warning: Letter {letter} invalid.")
+        
+    
+def play_peux_tu_trouver_la_lettre(letter) : 
+    if letter.upper() in ALPHABET:
+        play_audio("peux_tu_trouver_la_lettre_" + letter.lower())
+    else:
+        print(f"Warning: Letter {letter} invalid.")
+        
+
 
 # --- Game Levels ---
 
@@ -163,21 +172,20 @@ def level_0():
         time.sleep(0.02) # Small delay to prevent high CPU usage
 
 
-def level_1():
-    play_audio("niveau_1")
-    play_audio("appuyez_sur_touche_pour_lettre")
-    play_audio("appuyez_sur_4_quitter_jeu")
-    while True:
-        key = scan_keys()
-        if key:
-            if key == '4': # 4 = exit key
-                play_audio("retour_menu_confirmer")
-                play_audio("retour_menu")  
-                break
-            else:
-                play_audio(key + str(random.randint(0, 3))) # Assumes "a.mp3", "b.mp3", etc. exist
+# def level_1():
+#    play_audio("niveau_1")
+#    play_audio("appuyez_sur_touche_pour_lettre")
+#    play_audio("appuyez_sur_4_quitter_jeu")
+#    while True:
+#        key = scan_keys()
+#        if key:
+#            if key == '4': # 4 = exit key
+#                play_audio("retour_menu_confirmer")
+#                play_audio("retour_menu")  
+#                break            else:
+#                play_audio(key + str(random.randint(0, 3))) # Assumes "a.mp3", "b.mp3", etc. exist
 
-        time.sleep(0.02) # Small delay to prevent high CPU usage
+#        time.sleep(0.02) # Small delay to prevent high CPU usage
 
 def level_1():
     play_audio("niveau_1")
@@ -185,7 +193,13 @@ def level_1():
     play_audio("appuyez_sur_4_quitter_jeu")
     while True: # Loop for multiple questions
         target_letter = random.choice(ALPHABET)
-        play_ou_est_lettre(target_letter) # Plays the letter sound
+        choice = random.randint(0,1)
+        
+        if choice == 0 :
+            play_ou_est_lettre(target_letter) 
+        elif choice == 1 :
+            play_peux_tu_trouver_la_lettre(target_letter)
+            
         start_time = time.time()
         found = False
         timed_out = False
@@ -197,7 +211,13 @@ def level_1():
             key = scan_keys()
             if key:
                 if key == target_letter:
-                    play_audio("bravo") # Needs "bravo.mp3"
+                    if choice == 0 :
+                    play_audio("bravo0") # Needs "bravo.mp3"
+                    play_audio("cest_bien_la_lettre") # Needs "cest_bien_la_lettre.mp3"
+                    play_audio(target_letter)
+                    found = True
+                    elif choice == 1 :
+                    play_audio("bravo1") # Needs "bravo.mp3"
                     play_audio("cest_bien_la_lettre") # Needs "cest_bien_la_lettre.mp3"
                     play_audio(target_letter)
                     found = True
@@ -210,26 +230,21 @@ def level_1():
                     play_audio("ca_cest_la_lettre")
                     play_letter(key)
                     play_audio("essaie_encore")
-                    # Optionally repeat the question sound
-                    # play_audio("ou_est_la_lettre")
-                    # play_audio(target_letter)
+                    play_ou_est_lettre(target_letter)
             time.sleep(0.02)
 
         if timed_out:
             play_audio("temps_ecoule")
             play_audio("la_lettre")
-            play_letter(target_letter)
-            play_audio("etait_ici") # Needs "etait_ici.mp3"
-            # TODO: Maybe indicate the location? Requires mapping back from letter to row/col.
 
         # Ask if the user wants to continue
         play_audio("veux_tu_continuer")
-        play_audio("appuie_sur_a_oui_p_non") # Needs "appuie_sur_a_oui_p_non.mp3"
+        play_audio("appuie_sur_1_oui_2_non") # Needs "appuie_sur_a_oui_p_non.mp3"
         while True:
             key = scan_keys()
-            if key == 'A': # Assuming 'A' is top-left
+            if key == '1': # Assuming 'A' is top-left
                 break # Continue level 2 loop
-            elif key == '4': # Assuming 'P' is bottom-right
+            elif key == '2': # Assuming 'P' is bottom-right
                 play_audio("retour_menu_confirmer")
                 play_audio("retour_menu") 
                 return # Exit level 2 function
@@ -324,7 +339,6 @@ def level_3():
 if __name__ == "__main__":
     try:
         setup_gpio()
-        play_audio("bonjour") # Needs "bonjour.mp3"
         play_audio("bienvenue") # Needs "bienvenue.mp3"
 
         # Main loop for level selection menu
