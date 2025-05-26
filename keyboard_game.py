@@ -135,31 +135,57 @@ def play_letter(letter):
         play_audio(letter.lower() + str(random.randint(0, 3)))
     else:
         print(f"Warning: Letter {letter} invalid.")
+        
+def play_ou_est_lettre(letter) : 
+    if letter.upper() in ALPHABET:
+        play_audio("ou_est_la_lettre_" + letter.lower())
+    else:
+        print(f"Warning: Letter {letter} invalid.")
 
 # --- Game Levels ---
-def level_1():
-    play_audio("niveau_1")
+
+# niveau default / passif 
+def level_0():
+    play_audio("bienvenue") #ADAM-AJOUTER BIENVENUE SUR LE CLAVIER
     play_audio("appuyez_sur_touche_pour_lettre")
-    play_audio("appuyez_sur_1_quitter_jeu")
+    play_audio("appuyez_sur_4_quitter_jeu")
     while True:
         key = scan_keys()
         if key:
-            if key == '1': # Example exit key
-                play_audio("retour_menu") # Needs "retour_menu.mp3"
+            if key == '4': # Example exit key
+                play_audio("proposer_menu") 
+                play_audio("retour_menu_confirmer") #needs retour menu
+                play_audio("retour_menu")  
+                break
+            else:
+                play_audio(key) # Assumes "a.mp3", "b.mp3", etc. exist
+
+        time.sleep(0.02) # Small delay to prevent high CPU usage
+
+
+def level_1():
+    play_audio("niveau_1")
+    play_audio("appuyez_sur_touche_pour_lettre")
+    play_audio("appuyez_sur_4_quitter_jeu")
+    while True:
+        key = scan_keys()
+        if key:
+            if key == '4': # 4 = exit key
+                play_audio("retour_menu_confirmer")
+                play_audio("retour_menu")  
                 break
             else:
                 play_audio(key + str(random.randint(0, 3))) # Assumes "a.mp3", "b.mp3", etc. exist
 
         time.sleep(0.02) # Small delay to prevent high CPU usage
 
-def level_2():
-    play_audio("niveau_2")
-
+def level_1():
+    play_audio("niveau_1")
+    play_audio("appuyez_sur_touche_pour_lettre")
+    play_audio("appuyez_sur_4_quitter_jeu")
     while True: # Loop for multiple questions
         target_letter = random.choice(ALPHABET)
-        play_audio("ou_est_la_lettre") # Needs "ou_est_la_lettre.mp3"
-        play_letter(target_letter) # Plays the letter sound
-
+        play_ou_est_lettre(target_letter) # Plays the letter sound
         start_time = time.time()
         found = False
         timed_out = False
@@ -175,8 +201,9 @@ def level_2():
                     play_audio("cest_bien_la_lettre") # Needs "cest_bien_la_lettre.mp3"
                     play_audio(target_letter)
                     found = True
-                elif key == 'P': # Allow exiting mid-question
-                    play_audio("retour_menu")
+                elif key == '4': # Allow exiting mid-question
+                    play_audio("retour_menu_confirmer")
+                    play_audio("retour_menu") 
                     return
                 else:
                     play_audio("non")
@@ -202,8 +229,9 @@ def level_2():
             key = scan_keys()
             if key == 'A': # Assuming 'A' is top-left
                 break # Continue level 2 loop
-            elif key == 'P': # Assuming 'P' is bottom-right
-                play_audio("retour_menu")
+            elif key == '4': # Assuming 'P' is bottom-right
+                play_audio("retour_menu_confirmer")
+                play_audio("retour_menu") 
                 return # Exit level 2 function
             time.sleep(0.02)
 
@@ -251,8 +279,9 @@ def level_3():
                     # Remove the word so it's not asked again immediately
                     if word in words:
                         words.remove(word)
-                elif key == 'P': # Allow exiting mid-question
-                    play_audio("retour_menu")
+                elif key == '4': # Allow exiting mid-question
+                    play_audio("retour_menu_confirmer")
+                    play_audio("retour_menu") 
                     return
                 else:
                     play_audio("non")
@@ -284,8 +313,9 @@ def level_3():
             key = scan_keys()
             if key == 'A':
                 break # Continue level 3 loop
-            elif key == 'P':
-                play_audio("retour_menu")
+            elif key == '4':
+                play_audio("retour_menu_confirmer")
+                play_audio("retour_menu") 
                 return # Exit level 3 function
             time.sleep(0.02)
 
