@@ -181,7 +181,7 @@ def level_0():
                 play_audio("retour_menu")  
                 break
             else:
-                play_audio(key) # Assumes "a.mp3", "b.mp3", etc. exist
+                play_letter(key, neutral=True) # Assumes "a.mp3", "b.mp3", etc. exist
 
         time.sleep(0.02) # Small delay to prevent high CPU usage
 
