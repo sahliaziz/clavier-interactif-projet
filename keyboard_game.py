@@ -169,7 +169,6 @@ def play_peux_tu_trouver_la_lettre(letter) :
 
 # niveau default / passif 
 def level_0():
-    play_audio("bienvenue") #ADAM-AJOUTER BIENVENUE SUR LE CLAVIER
     play_audio("appuyez_sur_touche_pour_lettre")
     play_audio("appuyez_sur_4_quitter_jeu")
     while True:
@@ -181,7 +180,7 @@ def level_0():
                 play_audio("retour_menu")  
                 break
             else:
-                play_letter(key, neutral=True) # Assumes "a.mp3", "b.mp3", etc. exist
+                play_letter(key, neutral=False) # Assumes "a.mp3", "b.mp3", etc. exist
 
         time.sleep(0.02) # Small delay to prevent high CPU usage
 
@@ -205,6 +204,7 @@ def level_1():
     play_audio("niveau_1")
     play_audio("appuyez_sur_touche_pour_lettre")
     play_audio("appuyez_sur_4_quitter_jeu")
+    counter = 1
     while True: # Loop for multiple questions
         target_letter = random.choice(ALPHABET)
         choice = random.randint(0,1)
@@ -251,18 +251,21 @@ def level_1():
             play_audio("temps_ecoule")
             play_audio("la_lettre")
 
+        counter=counter+1
+
+        if counter%10 == 1 :
         # Ask if the user wants to continue
-        play_audio("veux_tu_continuer")
-        play_audio("appuie_sur_1_oui_2_non") 
-        while True:
-            key = scan_keys()
-            if key == '1': # Assuming 'A' is top-left
-                break # Continue level 2 loop
-            elif key == '2': # Assuming 'P' is bottom-right
-                play_audio("retour_menu_confirmer")
-                play_audio("retour_menu") 
-                return # Exit level 2 function
-            time.sleep(0.02)
+            play_audio("veux_tu_continuer")
+            play_audio("appuie_sur_1_oui_2_non") 
+            while True:
+                key = scan_keys()
+                if key == '1': # Assuming 'A' is top-left
+                    break # Continue level 2 loop
+                elif key == '2': # Assuming 'P' is bottom-right
+                    play_audio("retour_menu_confirmer")
+                    play_audio("retour_menu") 
+                    return # Exit level 2 function
+                time.sleep(0.02)
 
 def level_2():
     play_audio("niveau_2") # Needs "niveau_3.mp3"
