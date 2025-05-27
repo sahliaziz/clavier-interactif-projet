@@ -116,6 +116,7 @@ def scan_keys() -> str | None:
 
 # --- Audio Playback ---
 def play_audio(base_filename):
+    time.sleep(0.01)
     """Plays an audio file from the AUDIO_DIR."""
     if not pygame or not pygame.mixer.get_init():
         print(f"Audio Disabled - Would play: {base_filename}")
@@ -140,9 +141,12 @@ def play_audio(base_filename):
     except Exception as e:
         print(f"Error playing audio file {filepath}: {e}")
 
-def play_letter(letter):
+def play_letter(letter, neutral=False):
     if letter.upper() in ALPHABET:
-        play_audio(letter.lower() + str(random.randint(0, 3)))
+        if neutral:
+            play_audio(letter.lower())
+        else:
+            play_audio(letter.lower() + str(random.randint(0, 3)))
     else:
         print(f"Warning: Letter {letter} invalid.")
         
@@ -238,7 +242,7 @@ def level_1():
                 else:
                     play_audio("non")
                     play_audio("ca_cest_la_lettre")
-                    play_letter(key)
+                    play_letter(key, neutral=True) 
                     play_audio("essaie_encore")
                     play_ou_est_lettre(target_letter)
             time.sleep(0.02)
@@ -249,7 +253,7 @@ def level_1():
 
         # Ask if the user wants to continue
         play_audio("veux_tu_continuer")
-        play_audio("appuie_sur_1_oui_2_non") # Needs "appuie_sur_a_oui_p_non.mp3"
+        play_audio("appuie_sur_1_oui_2_non") 
         while True:
             key = scan_keys()
             if key == '1': # Assuming 'A' is top-left
@@ -487,6 +491,7 @@ if __name__ == "__main__":
     try:
         setup_gpio()
         play_audio("bienvenue") # Needs "bienvenue.mp3"
+        
 
         # Main loop for level selection menu
         while True:
@@ -494,6 +499,8 @@ if __name__ == "__main__":
             
             level_selected = False
             selected_level_key = None
+
+            level_0()
 
             # Wait for a valid menu selection
             while not selected_level_key:
