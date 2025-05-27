@@ -507,7 +507,6 @@ if __name__ == "__main__":
 
         # Main loop for level selection menu
         while True:
-            play_audio("menu_prompt") # Needs "menu_prompt.mp3" for the main menu instruction
             
             level_selected = False
             selected_level_key = None
