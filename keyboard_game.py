@@ -318,7 +318,6 @@ def level_2():
                 if key == target_letter:
                     play_audio("oui") # Needs "oui.mp3"
                     play_audio(target_letter)
-                    play_audio("comme_dans") # Needs "comme_dans.mp3"
                     play_audio(word)
                     play_audio("bravo")
                     found = True
@@ -446,7 +445,6 @@ def level_3():
                 if key == target_letter:
                     play_audio("oui")
                     play_audio(target_letter)
-                    play_audio("comme_dans") 
                     play_audio(word)
                     play_audio("bravo")
                     found = True
