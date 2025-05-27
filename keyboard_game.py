@@ -177,7 +177,7 @@ def level_0():
             if selected_level_key == '1':
                 level_1()
             elif selected_level_key == '2':
-                level_2()
+                level_2()   
             elif selected_level_key == '3':
                 level_3()
             elif selected_level_key == '4':
@@ -186,9 +186,11 @@ def level_0():
                 play_audio("retour_menu") 
                 return # Needs "au_revoir.mp3"
              # Exit the main program loop
-            
+            else:
+                play_letter(key, neutral=False) # Assumes "a.mp3", "b.mp3", etc. exist
 
         time.sleep(0.02) # Small delay to prevent high CPU usage
+
     
 
 
