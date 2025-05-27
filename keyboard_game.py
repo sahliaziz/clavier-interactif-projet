@@ -36,7 +36,7 @@ questions = {
 }
 
 questions_dur = {
-    "alimentation": "A", "anniversaire": "A", "Anticipation": "A", "Aspirateur": "A", "Boulanger": "B", "Bienvenue": "B",
+    "alimentation": "A", "anniversaire": "A", "Anticipation": "A", "Aspirateur": "A", "Boulanger": "B",
     "calculatrice": "C", "Carnivore": "C", "Cartouche": "C", "Catastrophe": "C", "Champignon": "C", "Chaussettes": "C",
     "chauvesouris": "C", "Chocolat": "C", "Compote": "C", "Crevette": "C", "Crocodile": "C", "Description": "D",
     "cinosaure": "D", "Dromadaire": "D", "Elephant": "E", "Escargot": "E", "Gaufrette": "G", "Hippopotame": "H",
@@ -282,7 +282,7 @@ def level_2():
     flat_key_map = {letter for row in KEY_MAP for letter in row if letter and letter != 'P'}
     available_questions = {word: letter for word, letter in questions.items()
                            if letter in flat_key_map}
-
+    counter = 1
     if not available_questions:
         play_audio("aucune_question_disponible") # Needs "aucune_question_disponible.mp3"
         play_audio("retour_menu")
@@ -346,24 +346,27 @@ def level_2():
             play_audio("toutes_questions_repondues") # Needs "toutes_questions_repondues.mp3"
             break # Exit level 3 loop
 
+        counter=counter+1
 
-        # Ask if the user wants to continue (similar to level 2)
-        play_audio("veux_tu_continuer")
-        play_audio("appuie_sur_a_oui_p_non")
-        while True:
-            key = scan_keys()
-            if key == 'A':
-                break # Continue level 3 loop
-            elif key == '4':
-                play_audio("retour_menu_confirmer")
-                play_audio("retour_menu") 
-                return # Exit level 3 function
-            time.sleep(0.02)
+        if counter%10 == 1 :
+        # Ask if the user wants to continue
+            play_audio("veux_tu_continuer")
+            play_audio("appuie_sur_1_oui_2_non") 
+            while True:
+                key = scan_keys()
+                if key == '1': # Assuming 'A' is top-left
+                    break # Continue level 2 loop
+                elif key == '2': # Assuming 'P' is bottom-right
+                    play_audio("retour_menu_confirmer")
+                    play_audio("retour_menu") 
+                    return # Exit level 2 function
+                time.sleep(0.02)
+
 
 def level_3():
     play_audio("niveau_3")
     flat_key_map = {letter for row in KEY_MAP for letter in row if letter and letter != 'P'}
-
+    counter = 1
     mots = list(questions.keys())
     random.shuffle(mots)
     mots = mots[:10]
@@ -482,18 +485,21 @@ def level_3():
             play_audio("felicitations")
             break
 
-        # Demande si on continue
-        play_audio("veux_tu_continuer")
-        play_audio("appuie_sur_1_oui_2_non")
-        while True:
-            key = scan_keys()
-            if key == '1':
-                break
-            elif key == '2':
-                play_audio("retour_menu_confirmer")
-                play_audio("retour_menu")
-                return
-            time.sleep(0.02)
+        counter=counter+1
+
+        if counter%10 == 1 :
+        # Ask if the user wants to continue
+            play_audio("veux_tu_continuer")
+            play_audio("appuie_sur_1_oui_2_non") 
+            while True:
+                key = scan_keys()
+                if key == '1': # Assuming 'A' is top-left
+                    break # Continue level 2 loop
+                elif key == '2': # Assuming 'P' is bottom-right
+                    play_audio("retour_menu_confirmer")
+                    play_audio("retour_menu") 
+                    return # Exit level 2 function
+                time.sleep(0.02)
     
 
 
