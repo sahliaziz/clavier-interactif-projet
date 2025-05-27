@@ -184,6 +184,39 @@ def level_0():
 
         time.sleep(0.02) # Small delay to prevent high CPU usage
 
+    level_selected = False
+    selected_level_key = None
+
+
+    # Wait for a valid menu selection
+    while not selected_level_key:
+        key = scan_keys()
+        if key in ['1', '2', '3', '4']: # Check if key is a valid menu option
+            # Verify the key actually exists in the KEY_MAP
+            if any(key in row for row in KEY_MAP):
+                 selected_level_key = key
+            else:
+                 print(f"Warning: Menu key '{key}' pressed but not found in KEY_MAP.")
+                 play_audio("touche")
+                 play_audio(key + "0")
+                 play_audio("non_configuree")
+                 time.sleep(1)
+                 play_audio("menu_prompt_court")
+        time.sleep(0.02)
+    # Execute selected action
+    if selected_level_key == '1':
+         level_1()
+    elif selected_level_key == '2':
+         level_2()
+    elif selected_level_key == '3':
+         level_3()
+    elif selected_level_key == '4':
+        play_audio("au_revoir")
+        play_audio("retour_menu_confirmer")
+        play_audio("retour_menu") 
+        return # Needs "au_revoir.mp3"
+         # Exit the main program loop
+
 
 # def level_1():
 #    play_audio("niveau_1")
