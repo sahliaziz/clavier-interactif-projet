@@ -174,13 +174,13 @@ def level_0():
     while True:
         key = scan_keys()
         if key:
-            if selected_level_key == '1':
+            if key == '1':
                 level_1()
-            elif selected_level_key == '2':
+            elif key == '2':
                 level_2()   
-            elif selected_level_key == '3':
+            elif key == '3':
                 level_3()
-            elif selected_level_key == '4':
+            elif key == '4':
                 play_audio("au_revoir")
                 play_audio("retour_menu_confirmer")
                 play_audio("retour_menu") 
