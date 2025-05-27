@@ -116,7 +116,7 @@ def scan_keys() -> str | None:
 
 # --- Audio Playback ---
 def play_audio(base_filename):
-    time.sleep(0.01)
+    time.sleep(0.05)
     """Plays an audio file from the AUDIO_DIR."""
     if not pygame or not pygame.mixer.get_init():
         print(f"Audio Disabled - Would play: {base_filename}")
@@ -174,48 +174,22 @@ def level_0():
     while True:
         key = scan_keys()
         if key:
-            if key == '4': # Example exit key
-                play_audio("proposer_menu") 
-                play_audio("retour_menu_confirmer") #needs retour menu
-                play_audio("retour_menu")  
-                break
-            else:
-                play_letter(key, neutral=False) # Assumes "a.mp3", "b.mp3", etc. exist
+            if selected_level_key == '1':
+                level_1()
+            elif selected_level_key == '2':
+                level_2()
+            elif selected_level_key == '3':
+                level_3()
+            elif selected_level_key == '4':
+                play_audio("au_revoir")
+                play_audio("retour_menu_confirmer")
+                play_audio("retour_menu") 
+                return # Needs "au_revoir.mp3"
+             # Exit the main program loop
+            
 
         time.sleep(0.02) # Small delay to prevent high CPU usage
-
-    level_selected = False
-    selected_level_key = None
-
-
-    # Wait for a valid menu selection
-    while not selected_level_key:
-        key = scan_keys()
-        if key in ['1', '2', '3', '4']: # Check if key is a valid menu option
-            # Verify the key actually exists in the KEY_MAP
-            if any(key in row for row in KEY_MAP):
-                 selected_level_key = key
-            else:
-                 print(f"Warning: Menu key '{key}' pressed but not found in KEY_MAP.")
-                 play_audio("touche")
-                 play_audio(key + "0")
-                 play_audio("non_configuree")
-                 time.sleep(1)
-                 play_audio("menu_prompt_court")
-        time.sleep(0.02)
-    # Execute selected action
-    if selected_level_key == '1':
-         level_1()
-    elif selected_level_key == '2':
-         level_2()
-    elif selected_level_key == '3':
-         level_3()
-    elif selected_level_key == '4':
-        play_audio("au_revoir")
-        play_audio("retour_menu_confirmer")
-        play_audio("retour_menu") 
-        return # Needs "au_revoir.mp3"
-         # Exit the main program loop
+    
 
 
 # def level_1():
