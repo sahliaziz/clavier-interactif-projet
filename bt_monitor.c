@@ -6,16 +6,16 @@
 #include <time.h>
 
 #define CHIP_NAME "gpiochip0"
-#define BUTTON_LINE 25    // BCM GPIO 25
-#define LED_LINE 8       // BCM GPIO 08
+#define BUTTON_LINE 11
+#define LED_LINE 25
 
 #define BT_MAC "DA:FE:25:0E:EE:19"
-#define CHECK_INTERVAL 20  // seconds
+#define CHECK_INTERVAL 10  // seconds
 
 // Connect to the Bluetooth speaker using bluetoothctl
 void connect_bluetooth(const char *mac) {
     char command[128];
-    snprintf(command, sizeof(command), "echo -e 'connect %s\nexit' | bluetoothctl > /dev/null", mac);
+    snprintf(command, sizeof(command), "echo 'connect %s\nexit\n' | bluetoothctl > /dev/null", mac);
     system(command);
 }
 
@@ -61,6 +61,7 @@ int main() {
 
     printf("Attempting initial connection...\n");
     connect_bluetooth(BT_MAC);
+    if (is_connected(BT_MAC)) printf("Connected successfully\n");
 
     while (1) {
         int value = gpiod_line_get_value(button);
