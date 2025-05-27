@@ -181,10 +181,14 @@ def level_0():
             elif key == '3':
                 level_3()
             elif key == '4':
-                play_audio("au_revoir")
-                play_audio("retour_menu_confirmer")
                 play_audio("retour_menu") 
-                return # Needs "au_revoir.mp3"
+                play_audio("retour_menu_confirmer")
+                confirm = scan_keys()
+                if confirm== '4' :
+                    play_audio("au_revoir")
+                    
+                    return # Needs "au_revoir.mp3"
+                    
              # Exit the main program loop
             else:
                 play_letter(key, neutral=False) # Assumes "a.mp3", "b.mp3", etc. exist
@@ -272,6 +276,7 @@ def level_1():
                     break # Continue level 2 loop
                 elif key == '2': # Assuming 'P' is bottom-right
                     play_audio("retour_menu_confirmer")
+                    
                     play_audio("retour_menu") 
                     return # Exit level 2 function
                 time.sleep(0.02)
@@ -357,7 +362,6 @@ def level_2():
                 if key == '1': # Assuming 'A' is top-left
                     break # Continue level 2 loop
                 elif key == '2': # Assuming 'P' is bottom-right
-                    play_audio("retour_menu_confirmer")
                     play_audio("retour_menu") 
                     return # Exit level 2 function
                 time.sleep(0.02)
@@ -449,9 +453,12 @@ def level_3():
                     compteur += 1
                     all_words.remove(word)
                 elif key == '4':
-                    play_audio("retour_menu_confirmer")
-                    play_audio("retour_menu")
-                    return
+                        play_audio("retour_menu") 
+                        play_audio("retour_menu_confirmer")
+                        confirm = scan_keys()
+                        if confirm== '4' :
+                            play_audio("au_revoir")
+                            return 
                 else:
                     play_audio("non1")
                     play_audio("ca_cest_la_lettre")
@@ -493,9 +500,9 @@ def level_3():
             play_audio("appuie_sur_1_oui_2_non") 
             while True:
                 key = scan_keys()
-                if key == '1': # Assuming 'A' is top-left
+                if key == '1':
                     break # Continue level 2 loop
-                elif key == '2': # Assuming 'P' is bottom-right
+                elif key == '2': 
                     play_audio("retour_menu_confirmer")
                     play_audio("retour_menu") 
                     return # Exit level 2 function
