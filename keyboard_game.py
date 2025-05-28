@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import RPi.GPIO as GPIO
 import time
 import pygame
@@ -66,6 +68,8 @@ def setup_gpio():
     """Sets up the GPIO pins for the keyboard matrix with diodes - reversed approach."""
     GPIO.setmode(GPIO.BOARD)
     GPIO.setwarnings(False)
+
+    GPIO.setup(22, GPIO.OUT)
 
     # For our reversed approach:
     # 1. Set all rows as outputs (initially LOW)
@@ -513,6 +517,8 @@ def level_3():
 if __name__ == "__main__":
     try:
         setup_gpio()
+        GPIO.output(22, 1)
+
         play_audio("bienvenue") # Needs "bienvenue.mp3"
         
 

@@ -9,7 +9,7 @@
 #define BUTTON_LINE 11
 #define LED_LINE 25
 
-#define BT_MAC "DA:FE:25:0E:EE:19"
+#define BT_MAC "3C:B0:ED:C3:89:4B"
 #define CHECK_INTERVAL 10  // seconds
 
 // Connect to the Bluetooth speaker using bluetoothctl
